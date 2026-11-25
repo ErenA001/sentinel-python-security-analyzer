@@ -1,0 +1,302 @@
+[
+  {
+    "id": "secret-positive-01",
+    "rule_id": "PY-SEC-001",
+    "label": "vulnerable",
+    "source": "API_KEY = 'example-demo-secret'\n"
+  },
+  {
+    "id": "secret-positive-02",
+    "rule_id": "PY-SEC-001",
+    "label": "vulnerable",
+    "source": "DATABASE_PASSWORD = \"Prod-DB-Password-2026\"\n"
+  },
+  {
+    "id": "secret-positive-03",
+    "rule_id": "PY-SEC-001",
+    "label": "vulnerable",
+    "source": "auth_token = \"token-123456789\"\n"
+  },
+  {
+    "id": "secret-positive-04",
+    "rule_id": "PY-SEC-001",
+    "label": "vulnerable",
+    "source": "private_key = \"-----BEGIN PRIVATE KEY-----abc\"\n"
+  },
+  {
+    "id": "secret-positive-05",
+    "rule_id": "PY-SEC-001",
+    "label": "vulnerable",
+    "source": "service_secret = \"s3cr3t-value-for-demo\"\n"
+  },
+  {
+    "id": "secret-negative-01",
+    "rule_id": "PY-SEC-001",
+    "label": "safe",
+    "source": "import os\nAPI_KEY = os.environ.get('API_KEY')\n"
+  },
+  {
+    "id": "secret-negative-02",
+    "rule_id": "PY-SEC-001",
+    "label": "safe",
+    "source": "PASSWORD = \"change_me\"\n"
+  },
+  {
+    "id": "secret-negative-03",
+    "rule_id": "PY-SEC-001",
+    "label": "safe",
+    "source": "api_key = load_api_key_from_vault()\n"
+  },
+  {
+    "id": "secret-negative-04",
+    "rule_id": "PY-SEC-001",
+    "label": "safe",
+    "source": "password = None\n"
+  },
+  {
+    "id": "secret-negative-05",
+    "rule_id": "PY-SEC-001",
+    "label": "safe",
+    "source": "AUTH_TOKEN = \"xxx\"\n"
+  },
+  {
+    "id": "dynamic-exec-positive-01",
+    "rule_id": "PY-SEC-002",
+    "label": "vulnerable",
+    "source": "result = eval(user_input)\n"
+  },
+  {
+    "id": "dynamic-exec-positive-02",
+    "rule_id": "PY-SEC-002",
+    "label": "vulnerable",
+    "source": "exec(untrusted_code)\n"
+  },
+  {
+    "id": "dynamic-exec-positive-03",
+    "rule_id": "PY-SEC-002",
+    "label": "vulnerable",
+    "source": "value = eval(request.args.get('expression'))\n"
+  },
+  {
+    "id": "dynamic-exec-positive-04",
+    "rule_id": "PY-SEC-002",
+    "label": "vulnerable",
+    "source": "exec(source_text, {})\n"
+  },
+  {
+    "id": "dynamic-exec-positive-05",
+    "rule_id": "PY-SEC-002",
+    "label": "vulnerable",
+    "source": "result = eval(expression, {\"__builtins__\": {}})\n"
+  },
+  {
+    "id": "dynamic-exec-negative-01",
+    "rule_id": "PY-SEC-002",
+    "label": "safe",
+    "source": "import ast\nresult = ast.literal_eval(user_input)\n"
+  },
+  {
+    "id": "dynamic-exec-negative-02",
+    "rule_id": "PY-SEC-002",
+    "label": "safe",
+    "source": "import json\nresult = json.loads(user_input)\n"
+  },
+  {
+    "id": "dynamic-exec-negative-03",
+    "rule_id": "PY-SEC-002",
+    "label": "safe",
+    "source": "number = int(user_input)\n"
+  },
+  {
+    "id": "dynamic-exec-negative-04",
+    "rule_id": "PY-SEC-002",
+    "label": "safe",
+    "source": "import ast\ntree = ast.parse(source_text, mode='eval')\n"
+  },
+  {
+    "id": "dynamic-exec-negative-05",
+    "rule_id": "PY-SEC-002",
+    "label": "safe",
+    "source": "from decimal import Decimal\namount = Decimal(user_input)\n"
+  },
+  {
+    "id": "shell-positive-01",
+    "rule_id": "PY-SEC-003",
+    "label": "vulnerable",
+    "source": "import subprocess\nsubprocess.run(command, shell=True)\n"
+  },
+  {
+    "id": "shell-positive-02",
+    "rule_id": "PY-SEC-003",
+    "label": "vulnerable",
+    "source": "import os\nos.system(command)\n"
+  },
+  {
+    "id": "shell-positive-03",
+    "rule_id": "PY-SEC-003",
+    "label": "vulnerable",
+    "source": "import subprocess\nsubprocess.call(f'tool {user_input}', shell=True)\n"
+  },
+  {
+    "id": "shell-positive-04",
+    "rule_id": "PY-SEC-003",
+    "label": "vulnerable",
+    "source": "import subprocess\nsubprocess.Popen(command, shell=True)\n"
+  },
+  {
+    "id": "shell-positive-05",
+    "rule_id": "PY-SEC-003",
+    "label": "vulnerable",
+    "source": "import subprocess\nsubprocess.check_output(command, shell=True)\n"
+  },
+  {
+    "id": "shell-negative-01",
+    "rule_id": "PY-SEC-003",
+    "label": "safe",
+    "source": "import subprocess\nsubprocess.run(['echo', 'hello'], shell=False, check=True)\n"
+  },
+  {
+    "id": "shell-negative-02",
+    "rule_id": "PY-SEC-003",
+    "label": "safe",
+    "source": "import subprocess\nsubprocess.run(['git', 'status'], check=True)\n"
+  },
+  {
+    "id": "shell-negative-03",
+    "rule_id": "PY-SEC-003",
+    "label": "safe",
+    "source": "import subprocess\nsubprocess.Popen(['tool', '--version'], shell=False)\n"
+  },
+  {
+    "id": "shell-negative-04",
+    "rule_id": "PY-SEC-003",
+    "label": "safe",
+    "source": "import subprocess\nsubprocess.check_call(['echo', 'ok'])\n"
+  },
+  {
+    "id": "shell-negative-05",
+    "rule_id": "PY-SEC-003",
+    "label": "safe",
+    "source": "import shlex\narguments = shlex.split(command_text)\n"
+  },
+  {
+    "id": "pickle-positive-01",
+    "rule_id": "PY-SEC-004",
+    "label": "vulnerable",
+    "source": "import pickle\nvalue = pickle.loads(payload)\n"
+  },
+  {
+    "id": "pickle-positive-02",
+    "rule_id": "PY-SEC-004",
+    "label": "vulnerable",
+    "source": "import pickle\nvalue = pickle.load(handle)\n"
+  },
+  {
+    "id": "pickle-positive-03",
+    "rule_id": "PY-SEC-004",
+    "label": "vulnerable",
+    "source": "import pickle\nvalue = pickle.loads(request.data)\n"
+  },
+  {
+    "id": "pickle-positive-04",
+    "rule_id": "PY-SEC-004",
+    "label": "vulnerable",
+    "source": "import pickle\nvalue = pickle.load(open('cache.bin', 'rb'))\n"
+  },
+  {
+    "id": "pickle-positive-05",
+    "rule_id": "PY-SEC-004",
+    "label": "vulnerable",
+    "source": "import pickle\nrestored = pickle.loads(serialized_object)\n"
+  },
+  {
+    "id": "pickle-negative-01",
+    "rule_id": "PY-SEC-004",
+    "label": "safe",
+    "source": "import json\nvalue = json.loads(payload)\n"
+  },
+  {
+    "id": "pickle-negative-02",
+    "rule_id": "PY-SEC-004",
+    "label": "safe",
+    "source": "import json\nvalue = json.load(handle)\n"
+  },
+  {
+    "id": "pickle-negative-03",
+    "rule_id": "PY-SEC-004",
+    "label": "safe",
+    "source": "import ast\nvalue = ast.literal_eval(payload)\n"
+  },
+  {
+    "id": "pickle-negative-04",
+    "rule_id": "PY-SEC-004",
+    "label": "safe",
+    "source": "import tomllib\nconfig = tomllib.loads(config_text)\n"
+  },
+  {
+    "id": "pickle-negative-05",
+    "rule_id": "PY-SEC-004",
+    "label": "safe",
+    "source": "import csv\nrows = list(csv.reader(text.splitlines()))\n"
+  },
+  {
+    "id": "sql-positive-01",
+    "rule_id": "PY-SEC-005",
+    "label": "vulnerable",
+    "source": "query = f\"SELECT * FROM users WHERE name = '{username}'\"\ncursor.execute(query)\n"
+  },
+  {
+    "id": "sql-positive-02",
+    "rule_id": "PY-SEC-005",
+    "label": "vulnerable",
+    "source": "query = \"SELECT * FROM users WHERE id = \" + user_id\ncursor.execute(query)\n"
+  },
+  {
+    "id": "sql-positive-03",
+    "rule_id": "PY-SEC-005",
+    "label": "vulnerable",
+    "source": "cursor.execute(f\"DELETE FROM users WHERE id = {user_id}\")\n"
+  },
+  {
+    "id": "sql-positive-04",
+    "rule_id": "PY-SEC-005",
+    "label": "vulnerable",
+    "source": "query = \"UPDATE users SET role = '\" + role + \"' WHERE id = \" + user_id\ncursor.execute(query)\n"
+  },
+  {
+    "id": "sql-positive-05",
+    "rule_id": "PY-SEC-005",
+    "label": "vulnerable",
+    "source": "query: str = f\"SELECT email FROM users WHERE account = '{account}'\"\ncursor.execute(query)\n"
+  },
+  {
+    "id": "sql-negative-01",
+    "rule_id": "PY-SEC-005",
+    "label": "safe",
+    "source": "cursor.execute('SELECT * FROM users WHERE name = ?', (username,))\n"
+  },
+  {
+    "id": "sql-negative-02",
+    "rule_id": "PY-SEC-005",
+    "label": "safe",
+    "source": "cursor.execute('SELECT * FROM users WHERE name = :username', {'username': username})\n"
+  },
+  {
+    "id": "sql-negative-03",
+    "rule_id": "PY-SEC-005",
+    "label": "safe",
+    "source": "cursor.execute('SELECT id, name FROM users')\n"
+  },
+  {
+    "id": "sql-negative-04",
+    "rule_id": "PY-SEC-005",
+    "label": "safe",
+    "source": "cursor.execute('INSERT INTO audit_log(message) VALUES (?)', (message,))\n"
+  },
+  {
+    "id": "sql-negative-05",
+    "rule_id": "PY-SEC-005",
+    "label": "safe",
+    "source": "command = 'report ' + report_name\ncursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))\n"
+  }
+]

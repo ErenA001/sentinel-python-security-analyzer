@@ -1,0 +1,93 @@
+digraph SentinelArchitecture {
+  graph [
+    rankdir=LR,
+    bgcolor="white",
+    pad="0.25",
+    nodesep="0.38",
+    ranksep="0.62",
+    splines=ortho,
+    fontname="DejaVu Sans",
+    fontsize=18,
+    labelloc="t",
+    label="SENTINEL v0.7.5 — SYSTEM ARCHITECTURE"
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=10, color="#536273", fillcolor="#F5F8FC", margin="0.16,0.10"];
+  edge [fontname="DejaVu Sans", fontsize=9, color="#536273", arrowsize=0.75];
+
+  user [label="User", shape=oval, fillcolor="#EAF1FB"];
+  ui [label="React + Vite\nDashboard", fillcolor="#EAF1FB"];
+  api [label="Flask API\nweb.py", fillcolor="#EAF1FB"];
+
+  subgraph cluster_input {
+    label="INPUT VALIDATION BOUNDARY";
+    color="#9AAFC8";
+    style="rounded,dashed";
+    intake [label="File intake\nrequest + filename + size + UTF-8"];
+    zip [label="ZIP safety checks\nin-memory; no extraction"];
+    sources [label="Validated Python\nsource files"];
+    intake -> zip [label="ZIP input"];
+    intake -> sources [label=".py / pasted source"];
+    zip -> sources;
+  }
+
+  subgraph cluster_analysis {
+    label="STATIC ANALYSIS PIPELINE";
+    color="#8DB7A6";
+    style="rounded,dashed";
+    parser [label="Python AST parser\nast.parse()"];
+    custom [label="Custom AST rules\nPY-SEC-001 ... PY-SEC-005\nPY-QUAL-001"];
+    bandit [label="Bandit adapter\noptional; shell=False; timeout"];
+    normalize [label="Finding normalizer\ndeduplicate + related metadata"];
+    syntax [label="Syntax errors\nrecorded per file"];
+    mypy [label="mypy adapter\noptional type checking"];
+    type [label="Type diagnostics\nkept separate"];
+    results [label="Combined scan result\nfindings + warnings + file errors"];
+    parser -> custom [label="valid syntax"];
+    parser -> syntax [label="invalid syntax"];
+    custom -> bandit [label="optional scan"];
+    custom -> normalize;
+    bandit -> normalize;
+    normalize -> results;
+    syntax -> results;
+    parser -> mypy [label="valid sources"];
+    mypy -> type;
+    type -> results;
+  }
+
+  subgraph cluster_data {
+    label="PERSISTENCE AND REPORTING";
+    color="#C7A77A";
+    style="rounded,dashed";
+    db [label="SQLite\nscan metadata + findings\n(no complete source files)", shape=cylinder, fillcolor="#FFF7E9"];
+    reports [label="JSON + HTML\nreport generation", fillcolor="#FFF7E9"];
+    db -> reports;
+  }
+
+  subgraph cluster_ai {
+    label="OPTIONAL AI SUPPORT — NOT THE DETECTION ENGINE";
+    color="#B5A0C9";
+    style="rounded,dashed";
+    consent [label="Consent + input\nvalidation", fillcolor="#F7F0FC"];
+    local [label="Local deterministic\nguidance", fillcolor="#F7F0FC"];
+    redact [label="Minimize + redact\nselected context", fillcolor="#F7F0FC"];
+    nvidia [label="NVIDIA API\nonly with consent", fillcolor="#F7F0FC"];
+    aiout [label="Advisory response", fillcolor="#F7F0FC"];
+    consent -> local [label="no provider"];
+    consent -> redact [label="consent granted"];
+    redact -> nvidia;
+    local -> aiout;
+    nvidia -> aiout;
+  }
+
+  user -> ui;
+  ui -> api [label="scan / history / reports"];
+  api -> intake;
+  sources -> parser;
+  results -> db;
+  results -> reports;
+  db -> api [label="stored scan data"];
+  reports -> api;
+  api -> ui [label="scan result"];
+  ui -> consent [label="optional explanation / chat"];
+  aiout -> ui;
+}

@@ -1,0 +1,79 @@
+digraph SentinelScanFlow {
+  graph [
+    rankdir=TB,
+    bgcolor="white",
+    pad="0.25",
+    nodesep="0.28",
+    ranksep="0.34",
+    splines=ortho,
+    fontname="DejaVu Sans",
+    fontsize=18,
+    labelloc="t",
+    label="SENTINEL v0.7.5 — SOURCE-CODE ANALYSIS FLOW"
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=9, color="#536273", fillcolor="#F5F8FC", margin="0.14,0.08"];
+  edge [fontname="DejaVu Sans", fontsize=8, color="#536273", arrowsize=0.7];
+
+  start [label="Start", shape=oval, fillcolor="#EAF1FB"];
+  input [label="User supplies .py, ZIP, or pasted Python source"];
+  valid_request [label="Request format valid?", shape=diamond, fillcolor="#FFF7E9"];
+  reject [label="Return input error", fillcolor="#FCEEEE"];
+  kind [label="Input type?", shape=diamond, fillcolor="#FFF7E9"];
+  single [label="Validate .py / pasted source\nfilename, extension, UTF-8, size"];
+  zip_size [label="Check ZIP upload size"];
+  zip_safe [label="ZIP entries safe and within limits?\npaths, links, encryption, duplicates, counts, sizes", shape=diamond, fillcolor="#FFF7E9"];
+  zip_files [label="Read Python entries in memory\n(no filesystem extraction)"];
+  has_py [label="Contains at least one .py file?", shape=diamond, fillcolor="#FFF7E9"];
+  sources [label="Validated source-file list"];
+  parse [label="Parse each file with ast.parse()"];
+  syntax [label="Record syntax error\nSkip AST rules for this file", fillcolor="#FFF7E9"];
+  syntax_ok [label="Syntax valid?", shape=diamond, fillcolor="#FFF7E9"];
+  ast_rules [label="Run custom AST security and\nexception-handling rules"];
+  bandit_q [label="Bandit enabled?", shape=diamond, fillcolor="#FFF7E9"];
+  bandit [label="Run Bandit adapter\nfixed arguments, shell=False, timeout"];
+  bandit_warn [label="Record scanner warning\nif unavailable or failed", fillcolor="#FFF7E9"];
+  collect [label="Collect available findings"];
+  more [label="More source files?", shape=diamond, fillcolor="#FFF7E9"];
+  mypy_q [label="mypy enabled?", shape=diamond, fillcolor="#FFF7E9"];
+  mypy [label="Run isolated mypy type check\non syntactically valid sources"];
+  no_mypy [label="Mark type check not requested"];
+  normalize [label="Normalize findings and\nconsolidate duplicates"];
+  result [label="Build scan result\nfindings, type diagnostics, warnings, file errors"];
+  store [label="Save scan metadata and findings\nin SQLite; do not store full source"];
+  response [label="Return scan ID and result via Flask API"];
+  display [label="Display dashboard, finding details,\ntype-check panel, and scan summary"];
+  export [label="Allow JSON and HTML report downloads"];
+  end [label="End", shape=oval, fillcolor="#EAF1FB"];
+
+  start -> input -> valid_request;
+  valid_request -> reject [label="No"];
+  valid_request -> kind [label="Yes"];
+  kind -> single [label=".py / pasted"];
+  kind -> zip_size [label="ZIP"];
+  zip_size -> zip_safe;
+  zip_safe -> reject [label="No"];
+  zip_safe -> zip_files [label="Yes"];
+  zip_files -> has_py;
+  has_py -> reject [label="No"];
+  has_py -> sources [label="Yes"];
+  single -> sources;
+  sources -> parse -> syntax_ok;
+  syntax_ok -> syntax [label="No"];
+  syntax_ok -> ast_rules [label="Yes"];
+  ast_rules -> bandit_q;
+  bandit_q -> collect [label="No"];
+  bandit_q -> bandit [label="Yes"];
+  bandit -> collect [label="Completed"];
+  bandit -> bandit_warn [label="Failed / unavailable"];
+  bandit_warn -> collect;
+  collect -> more;
+  syntax -> more;
+  more -> parse [label="Yes", constraint=false];
+  more -> mypy_q [label="No"];
+  mypy_q -> mypy [label="Yes"];
+  mypy_q -> no_mypy [label="No"];
+  mypy -> normalize;
+  no_mypy -> normalize;
+  normalize -> result -> store -> response -> display -> export -> end;
+  reject -> end;
+}

@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local databases and reports
+*.sqlite3
+*.sqlite
+*.db
+reports/
+instance/
+
+# Frontend
+node_modules/
+frontend/dist/
+
+# Backups
+backups/
+*.backup
+*.backup-*
+
+# Operating system
+.DS_Store
+
+# Test and coverage
+.coverage
+htmlcov/
