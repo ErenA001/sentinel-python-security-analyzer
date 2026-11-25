@@ -1,3 +1,4 @@
+
 # Sentinel — Python Programming Language Security Analyzer
 
 **Sentinel Security Analyzer v0.7.5** is an academic software project for the Programming Languages course (Topic No. 13). It performs static security analysis of Python source code using Python's Abstract Syntax Tree (AST), a focused set of custom security rules, and Bandit. It can optionally run mypy as a separate type-safety check.
@@ -412,7 +413,7 @@ These are local verification results from the development environment; they are 
 - False positives and false negatives are expected; broader independent evaluation is still needed.
 - The local Flask configuration is intended for development and local demonstration. Authentication, CSRF protections, and a shared production-grade rate limiter are required before exposing the application beyond localhost.
 
-## Screenshots
+## Screenshots and demo
 
 ### Desktop
 
@@ -446,19 +447,37 @@ The following captures use an iPhone 14 Pro Max browser-emulation viewport confi
 
 ### Demo video
 
-[![Watch the Sentinel product demo](docs/demo/poster.jpg)](https://github.com/ErenA001/sentinel-python-security-analyzer/releases/latest/download/Sentinel_Product_Demo.mp4)
+**Watch the Sentinel Security Analyzer demonstration directly below:**
 
-[Watch or download the Sentinel demo video (MP4)](https://github.com/ErenA001/sentinel-python-security-analyzer/releases/latest/download/Sentinel_Product_Demo.mp4)
+![Sentinel Product Demo Poster](docs/demo/poster.jpg)
+
+https://github.com/user-attachments/assets/8bdb3ac0-8e3d-4f32-85f1-6c0fc03210ff
+
+[Download the full Sentinel Product Demo (MP4)](https://github.com/ErenA001/sentinel-python-security-analyzer/releases/download/v0.7.5/Sentinel_Product_Demo.mp4)
 
 ### Demo contact sheet
 
-![Sentinel product demo contact sheet](docs/demo/contact-sheet.jpg)
+![Sentinel Product Demo Contact Sheet](docs/demo/contact-sheet.jpg)
 
 [Open the full demo contact sheet](docs/demo/contact-sheet.jpg)
+
 ---
 
 ## Project status
 
-The local application has been implemented and manually exercised on macOS. The backend and frontend test suites pass in the current development environment, and the responsive dark dashboard is in place.
+**Sentinel Security Analyzer v0.7.5 is officially published.**
 
-Academic report, presentation slides, final screenshots, and the demo video are separate project deliverables and are being prepared after the software and repository presentation are finalized.
+- Public GitHub repository.
+- Complete Python source code and React frontend.
+- Desktop and mobile screenshots.
+- System architecture and analysis flowcharts.
+- Demo poster and contact sheet.
+- Demonstration video embedded in the README.
+- Downloadable MP4 available through GitHub Releases.
+- Backend tests: **107 passed**.
+- Frontend tests: **5 passed**.
+- Vite production build: **successful**.
+
+All test results represent local verification and not hosted CI results.
+
+The academic report and presentation slides are separate course deliverables.
